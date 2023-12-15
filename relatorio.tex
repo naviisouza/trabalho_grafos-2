@@ -1,0 +1,182 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% How to use writeLaTeX: 
+%
+% You edit the source code here on the left, and the preview on the
+% right shows you the result within a few seconds.
+%
+% Bookmark this page and share the URL with your co-authors. They can
+% edit at the same time!
+%
+% You can upload figures, bibliographies, custom classes and
+% styles using the files menu.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+
+\usepackage{graphicx,url}
+
+\usepackage{enumitem}
+
+\usepackage{tabularx}
+
+%\usepackage[brazil]{babel}   
+\usepackage[utf8]{inputenc}  
+
+     
+\sloppy
+
+\title{Trabalho Prático\\ Biblioteca para Manipulação de Grafos}
+
+\author{Stephanie M. Cardozo, Rafael Silva Oliveira}
+
+
+\address{Pontifícia Universidade Católica de Minas Gerais (PUC Minas)\\
+  Código Postal 32.010-025 -- Contagem -- MG -- Brasil
+  \email{scardozo@sga.pucminas.br}
+  \email{rafael.oliveira.1329416@sga.pucminas.br}
+}
+
+\begin{document} 
+
+\maketitle
+
+\begin{resumo} 
+  Este relatório descreve as funções e os métodos de uma biblioteca desenvolvida para manipular grafos e representá-los em listas de adjacência, arquivos GML e matrizes de adjacência. A biblioteca utiliza o algoritmo de Fleury para mostrar um caminho euleriano e usa os princípios de Naive/Tarjan para identificar pontes. Além de fornecer opções para criar grafos e realizar consultas, o código fonte também é capaz de ler arquivos GML.
+\end{resumo}
+
+
+\section{Introdução} \label{sec:firstpage}
+
+O objetivo do trabalho é realizar estudos sobre grafos, entender o funcionamento de determinados algoritmos e realizar a contrução e a alteração de estruturas. O trabalho está dividido em duas entregas.
+
+Na primeira entrega, o usuário cria um grafo e consegue realizar a inclusão de arestas, consultar o número de vértices, ponderar uma aresta, dentre outros tipos de manipulação. Em seguida, é possível gerar uma representação do grafo.
+
+Caso o usuário tenha optado por gerar um arquivo GML na parte 1, é possível usá-lo como entrada na parte 2 do trabalho e encontrar um caminho euleriano (caso o grafo seja, de fato, euleriano). Na segunda entrega, os métodos de Naive e Tarjan são usados para encontrar pontes.
+
+\section{Materiais e Métodos}
+
+Linguagem utilizada: Python 3.9.0;\\ 
+Biblioteca auxiliar: NetworkX 2.8.8;\\
+Software para visualização de grafos: Gephi.
+
+Primeiramente, é preciso realizar a instalação do Python no sistema operacional, em seguida, para instalar a biblioteca no computador, basta abrir o Prompt de Comando e digitar: "pip install networkx[default]".
+
+\section{Resultados e Discussões}
+\subsection{Primeira Entrega}
+
+Após compilar o código, o usuário tem a opção de criar um grafo ou de inserir o caminho de um arquivo GML existente.
+
+Caso ele escolha criar um grafo, uma mensagem solicita o número de vértices, em seguida, é perguntado se o grafo é direcionado ou não. Se for não-orientado, o usuário digita "1" e o método "nx.Graph" é chamado. Caso seja direcionado, ele deve digitar "2", assim, chamando "nx.DiGraph". Ambos os métodos fazem parte da biblioteca NetworkX e são usados para criar um grafo "G" (objeto que possui dicionários para armazenar vértices, arestas e atributos).
+
+Posteriormente, aparecerá no terminal uma mensagem perguntando o rótulo e o peso do primeiro vértice. A mensagem é repetida para cada um dos nós.
+
+Feito isso, um grafo vazio é criado e o método "menu" é chamado. Se o usuário escolheu inserir o caminho de um arquivo, o menu será chamado logo após.
+
+No menu principal, existem várias opções para manipular o grafo G. Cada opção será detalhada a seguir:
+
+\begin{enumerate}[itemsep=8pt,parsep=8pt]
+    \item Criar arestas:\\ Adiciona uma aresta ao grafo G;\\ Parâmetros: vértice de origem, vértice de destino e valor da aresta;\\ Caso o peso seja igual a 0, a aresta será desconsiderada pelo Gephi e pela matriz de adjacência.
+    
+    \item Remover arestas: Deleta a aresta inserida pelo usuário.
+    
+    \item Rotular arestas: Adiociona o atributo "rótulo" à uma aresta existente.
+    
+    \item Adjacência entre vértices: O usuário insere um vértice e a biblioteca retorna os vizinhos deste nó por meio de um iterador, percorrendo o dict de nós e verificando a existência de arestas entre o vértice escolhido e os demais vértices do grafo.
+    
+    \item Adjacencia entre arestas: O usuário escolhe uma aresta, em seguida, uma lista com todas as arestas do grafo é gerada. Posteriormente, o programa checa se o primeiro vértice da aresta escolhida existe nas demais arestas do grafo, se for verdade, há adjacencia. Esse mesmo procedimento é repetido para o segundo vértice. Se os dois nós existem ao mesmo tempo, trata-se da mesma aresta inserida pelo usuário, logo, não é adjacente.
+    
+    \item Existência de arestas: A biblioteca verifica se determinada aresta existe no grafo "G" usando o operador "in". Caso exista, a função retorna True, se não existe, retorna False.
+    
+    \item Quantidade de vértices e de arestas: A biblioteca retorna um número inteiro que representa o tamanho do dicionário em que os vértices estão armazenados. Esse mesmo princípio é utilizado para retornar a quantidade de arestas.
+    
+    \item Verificar se o grafo é vazio ou completo: Confere o número de arestas e, se for igual a zero, o grafo é vazio. Para checar se é completo, o programa utiliza a seguinte fórmula: "(V * (V - 1))/2". Em um grafo completo, o total de vértices é igual a V; nesse grafo, um vértice se conecta com todos os outros vértices, menos com ele mesmo (V - 1). Isso será repetido para todos os outros vértices (V * V - 1); dividimos por 2 para não contar o mesmo vértice duas vezes após a multiplicação.
+    
+    \item Imprimir matriz de adjacência: As linhas e colunas são ordenadas de acordo com os nós que estão armazenados na lista de vértices. O atributo da aresta que contém o valor do "peso" é usado para preencher a matriz.
+    
+    \item Imprimir lista de adjacência: Ao criar um vértice, a biblioteca, automaticamente, armazena-o em uma lista de adjacência (dict). Esta função imprime a lista no terminal.
+    
+    \item Gerar arquivo: Gera um arquivo com extenção GEXF, o qual é salvo na mesma pasta onde está localizado o código fonte.
+\end{enumerate}
+
+\subsection{Segunda Entrega}
+Na segunda parte do trabalho, o desafio era encontrar pontes no grafo, utilizando dois métodos diferentes. A sugestão indicada foi Naive e Tarjan, dois métodos distintos, porém, com o mesmo objetivo.
+
+Com o Naive, analisamos as arestas, uma por uma. Se, ao remover determinada aresta, a quantidade de componentes do grafo aumentar, ela é uma ponte. Para isso, foi feita uma busca em profundidade.
+
+Já a estratégia de Tarjan consiste em verificar, de forma recursiva, cada nó do grafo, em forma de corte de arestas. Para isso, são determinados atributos para cada vértice, como: se já foi visitado, o tempo de descoberta e o nível no vértice. A partir do momento em que o atributo visitado for igual a False, o código entra em recursividade, fazendo com que o vizinho do primeiro nó seja visitado, recebendo mais 1 em tempo e nível.
+
+Após percorrer todos os vértices, se o nó raiz possuir mais de um sucessor, o atributo corte recebe True. Se o nó não for raiz, mas o nó vizinho possuir o atributo low maior ou igual ao atributo "time" do nó raiz, o nó raiz também recebe True no atributo corte.
+
+Com esses dois métodos implementados, o próximo desafio foi encontrar um caminho euleriano com o algoritmo de Fleury. Fleury, a partir do vértice raiz, escolhe uma aresta qualquer e, inicialmente, verifica se aquela aresta é uma ponte, não sendo, aquela aresta é removida e verifica-se novamente a quantidade de graus do vértice seguinte, sendo acima de um, faz a verificação de existência de ponte, até percorrer todos os vertices. Para que a função funcionasse corretamente, utilizamos uma ferramenta da biblioteca chamada "is-eulerian", que verifica se a possibilidade de haver caminho eureliano é real, analisando se todos os vértices possuem grau par.
+
+Implementamos um contador de tempo para a execução de Fleury assim que o usuário escolhe qual dos dois métodos de verificação ele quer utilizar. No terminal, é indicado quanto tempo levou a operação.\vspace{1cm}
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.5\textwidth]{Figure1.png}
+\caption{Exemplo de Tempo de execução utilizando Naive}
+\label{fig:exampleFig1}
+\end{figure}
+
+
+Com tudo implementado, o novo objetivo foi testar com diferentes números de vertices. As escolhas foram: 100 (cem), 1000 (mil), 10000 (dez mil) e 100000 (cem mil) vertices. Na tabela abaixo, encontram-se os valores de tempo para cada um dos métodos.
+
+Tabela 1. Resultados em um PC com 8GB de RAM
+
+\begin{tabularx}{0.8\textwidth} { 
+  | >{\raggedright\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\raggedleft\arraybackslash}X | }
+ \hline
+   & Naive & Tarjan \\
+ \hline
+ 100 vértices  & 0.6731 segundos  & 0.1706 segundos  \\
+ \hline
+ 1000 vértices  & 33.28 minutos  & 82.3 segundos  \\
+ \hline
+ 10000 vértices  & 2.27 segundos  & 2.29 segundos \\
+ \hline
+ 100000 vértices  & 21.72 segundos  & 21.73 segundos \\
+\hline
+\end{tabularx} 
+
+
+Tabela 2. Resultados em um PC com 16GB de RAM
+
+\begin{tabularx}{0.8\textwidth} { 
+  | >{\raggedright\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\raggedleft\arraybackslash}X | }
+ \hline
+   & Naive & Tarjan \\
+ \hline
+ 100 vértices  & 0.2893 segundos  & 0.0795 segundos  \\
+ \hline
+ 1000 vértices  & 14.42 minutos  & 42.6 segundos  \\
+ \hline
+ 10000 vértices  & 0.8966 segundos  & 0.9140 segundos \\
+ \hline
+ 100000 vértices  & 9.44 segundos  & 9.47 segundos  \\
+\hline
+\end{tabularx}
+
+
+Os grafos de 100 (cem) e 1000 (mil) vértices foram gerados aleatoriamente pelo software gephi, transformados em não-direcionados e eulerizados com o auxílio da biblioteca NetworkX. Já os de 10000 (dez mil) e 100000 (cem mil), são grafos cíclicos, que possuem a quantidade de arestas igual a quantidade de vértices. Optamos por gerar os grafos dessa forma por conta de erros de memória.
+
+Por essa razão, os valores possuem tanta discrepância com os valores de grafos menores, até mesmo entre os dois métodos, praticamente não existe diferença de tempo de execução.
+
+\section{Conclusão}
+
+Após a finalização do trabalho, é notável que o conhecimento da equipe em relação à teoria de grafos foi aumentado. Ademais, foi possível compreender o funcionamento do código fonte de uma biblioteca pronta, a qual foi de grande utilidade e simplificou a manipulação. Foi extremamente necessário possuir tal biblioteca, pois ter a possibilidade de verificar funções básicas, mas essenciais para funções mais complexas foi o diferencial para conseguir realizar essa atividade.
+
+Em relação às descobertas, percebemos que a eficácia do algoritmo de Tarjan é maior, mas é preciso aumentar o limite de recursividade do python, caso contrário, dependendo da quantidade de arestas, surgirão erros. Além disso, foi notável a dificuldida de trabalhar com grafos muito grandes por conta da memória disponível.
+
+\section{Referências}
+
+NETWORKX DEVELOPERS. NetworkX -- Network Analysis in Python. Versão 2.8.8. Novembro, 2022. Disponível em: https://networkx.org/
+
+\end{document}
